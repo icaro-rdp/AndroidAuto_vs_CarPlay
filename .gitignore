@@ -1,0 +1,24 @@
+# Compiled Python bytecode
+__pycache__/*
+
+# Testing
+.pytest_cache/
+.coverage
+
+# Virtual environment 
+env/
+venv/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Project-specific
+.mypy_cache/
+.ipynb_checkpoints/
+**/logs/
+**/data/
+
+# IDE/Editor
+.vscode/
+.idea/
