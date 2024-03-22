@@ -5,16 +5,23 @@ let tX;
 let tY;
 let tri_h = 50;
 let tri_b = 50;
+
 let FPS = 30;
 let joyConnected = false;
 let gameStarted = false;
+let timeTrialMode = true;
 let startFrame;
 let elapsedFrames = 0;
 let trialDuration = 30 * FPS; //seconds * FPS
 let errorList = []
+
 let gamepad;
 let videoRecorder;
 let capture;
+
+let subjectID;
+let platformID;
+let taskID;
 
 window.addEventListener("gamepadconnected", (e) => {
   console.log(e);
@@ -22,14 +29,14 @@ window.addEventListener("gamepadconnected", (e) => {
 
 function setup() {
   frameRate(FPS);
-  createCanvas(600, 600);
+  //createCanvas(600, 600);
+  createCanvas(window.innerWidth,window.innerHeight);
 
   capture = createCapture({ video: true, audio: false});
-  //capture.size(320, 240);
   capture.volume(0);
   capture.hide();
   videoRecorder = new p5.VideoRecorder(capture); //https://github.com/calebfoss/p5.videorecorder
-  videoRecorder.onFileReady = showAndSaveVideo;
+  videoRecorder.onFileReady = saveVideo;
 
   bX = width/2;
   bY = height/2 - 50;
@@ -47,14 +54,11 @@ function draw() {
 
   image(capture, 0, 0, 320, 240);
   
-  gamepad = navigator.getGamepads()[0];
+  gamepad = assignGamepadById('Joy-Con L+R');
   
-  if(!joyConnected){
-    text("Move the stick",width/2,height/2-100)
-    if(gamepad!=null){
-      joyConnected=true;
-
-    }
+  if(!gamepad){
+    text("Connect gamepads",width/2,height/2-200);
+    text("Move the stick",width/2,height/2-100);
   }
   else if(!gameStarted){
     text("press the LZ button to start",width/2,height/2-200)
@@ -66,18 +70,32 @@ function draw() {
       startRecording() //start recording video
     }
   }
-  else if(elapsedFrames < trialDuration) {
+  else if(!shouldGameStop()) {
     elapsedFrames += 1;
     drawTriangle(true);
     drawBall(true);
-    //drawTrace();
     measureError();
   }
   else{
     stopRecording(); //stop recording video\\ 
+    saveStatsFile();
     console.log("mean error "+ avgArr(errorList))
+    text("done",width/2,height/2-200);
     noLoop(); 
   }
+}
+
+function shouldGameStop(){
+  if(gamepad.buttons[7].pressed){
+    return true;  
+  }
+  if(timeTrialMode){
+    if(elapsedFrames < trialDuration){
+      return false;
+    }
+    return true;
+  }
+  //if() button or spacebar is pressed
 }
 
 function measureError(){
@@ -87,11 +105,11 @@ function measureError(){
 
 function drawTriangle(move){
   if(move){
-    let speed = 8;
+    let speed = 1/75 * width;
     let [xIn, yIn] = gamepad.axes;
-    tX = tX + speed*(-yIn);
+    tX = tX + speed*(xIn);
+    tX = constrain(tX, 0, width);
   }
-  
   fill(0, 255, 255)
   triangle(tX-tri_b/2,tY , tX, tY - tri_h, tX+tri_b/2, tY);
   
@@ -128,6 +146,20 @@ function complexCurve(t){
   return y*width/2+(width/2);
 }
 
+function assignGamepadById(gamepadId) {
+  const gamepads = navigator.getGamepads();
+  console.log(gamepads);
+  for (let i = 0; i < gamepads.length; i++) {
+    const gamepad = gamepads[i];
+    if (gamepad && gamepad.id.includes(gamepadId)) {
+      //console.log('Gamepad found:', gamepad);
+      return gamepad;
+    }
+  }
+  //console.log('Gamepad not found:', gamepadId);
+  return null;
+}
+
 function avgArr(a){
   sum = a.reduce((total, number) => total + number, 0);
   return sum / a.length;
@@ -141,12 +173,26 @@ function stopRecording() {
   videoRecorder.stop()
 }
 
-function showAndSaveVideo() {
-  //  Get url of recorded video
-//  let videoURL = videoRecorder.url;
-  //  Create video player element with recording as source
- // let vid = createVideo(videoURL);
-  //vid.showControls();
-  //  Download the recording
-  videoRecorder.save("myVideo");
+function saveVideo() {
+  let filename = subjectID + '_' + platformID + '_' + taskID;
+  videoRecorder.save(filename);
+}
+
+//format: 
+//line1: subjectID platformID taskID
+//line2: timeOnTask meanAbsError
+//line3: list of absError per frame (comma separated)
+function saveStatsFile() { 
+  let filename = subjectID + '_' + platformID + '_' + taskID+'.txt';
+  let l1 = subjectID + ' ' + platformID + ' ' + taskID;
+  let l2 = (elapsedFrames/FPS) + ' ' + avgArr(errorList);
+  let l3 = errorList.toString();
+  let text = l1 + '\n' + l2 + '\n' + l3;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 }
