@@ -1,0 +1,22 @@
+Goals of the study
+
+Hypothesis
+1. Using IVIS systems will have a detremental effect on visual attention on the driving task.
+2. Different IVIS sytems will have a different impacts on visual attention, either overall or in analogous tasks.
+(which one and why?)
+3. Better perceived usability will correlate with a lower impact on visual attention.
+4. Familiarity with platform will have an impact with performance and usability
+
+
+
+We have two measusres of visual attention
+1. driving task performance
+2. proportion of time looking at driving task
+
+We have three measures of usability
+1. time-on-task
+2. post-task questionnaire (SEQ)
+3. platfrom questionnaire (UMUX)
+
+We also measure other variables that could affect performance such as:
+- Familiarity with systems/platforms

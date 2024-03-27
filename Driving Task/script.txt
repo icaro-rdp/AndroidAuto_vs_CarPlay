@@ -1,0 +1,60 @@
+1. INTRO
+
+    Hi, welcome to the experiment.
+    We are conducting a project for a university course.
+    We are studying the impact of different Infotainment Systems on attention while driving.
+
+    For this experiments you will not be asked to drive but we will need you to sit in a stationary car and perform some tasks.
+    
+    Since we are studying attention we use some eye tracking software in order to estimate what you are looking at during the experiment,
+    to do this we need to record video of the tasks thorugh a webcam.
+    These videos will not be shared with anyone, and will be analyzed automatically by an algorithm.
+    Is this ok with you?
+
+    NOTE: ??*sign informed consent*??
+
+    The experiment will consists in a series of tasks, in which we are going to ask you to play a game on the pc
+    using a joystick, at the same time we are also going to ask you to perform some tasks on the screen of the car.
+
+    Any questions?
+
+1.5 INTRO QUESTIONNAIRE
+
+    Before we start we need you to fill this questionnarie.
+
+2. FAMILIARIZATION
+
+    Ok, so, the game you will be playing is very simple.
+    On the screen there is a ball and a triangle,
+    the ball moves randomly from side to side,
+    you control the triangle, 
+    and you can move it from side to side with the joystick.
+    your goal is to follow tha ball as close as possible for the whole time.
+
+    Do you have any questions?
+
+    Ok let's start with some practice runs, to get you familiar with the game.
+    Hold the controller with your left hand. (!!!!!IMPORTANT!!!!)
+    The game lasts for 30 seconds. Follow the ball, do the best you can.
+
+    Ok, let's do it again
+
+    Last practice run
+
+3. CONTROL
+
+    Ok, this the first real task, just do the same as bfore,
+    only difference, this time we will record your score.
+
+4. TASKS
+
+    Ok, perfect, 
+    now we will ask you to do the same thing, 
+    but at the same time we will also ask you execute some tasks on this touch-screen.
+    You have no time limit now.
+
+TASK: NAVIGATION
+
+TASK: MUSIC
+
+TASK CALL

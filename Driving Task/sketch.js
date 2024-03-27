@@ -1,23 +1,24 @@
 let bX;
 let bY;
-let ball_r = 30;
+let ball_r = 60;
 let tX;
 let tY;
-let tri_h = 50;
-let tri_b = 50;
+let tri_h = 80;
+let tri_b = 80;
 
 let FPS = 30;
 let joyConnected = false;
 let gameStarted = false;
-let timeTrialMode = true;
+let timeTrialMode = false;
 let startFrame;
 let elapsedFrames = 0;
-let trialDuration = 30 * FPS; //seconds * FPS
+let trialDuration = 45 * FPS; //seconds * FPS
 let errorList = []
 
 let gamepad;
 let videoRecorder;
 let capture;
+let doneButton;
 
 let subjectID;
 let platformID;
@@ -28,20 +29,25 @@ window.addEventListener("gamepadconnected", (e) => {
 });
 
 function setup() {
-  frameRate(FPS);
-  //createCanvas(600, 600);
-  createCanvas(window.innerWidth,window.innerHeight);
 
   capture = createCapture({ video: true, audio: false});
   capture.volume(0);
   capture.hide();
-  videoRecorder = new p5.VideoRecorder(capture); //https://github.com/calebfoss/p5.videorecorder
-  videoRecorder.onFileReady = saveVideo;
 
-  bX = width/2;
-  bY = height/2 - 50;
-  tX = width/2;
-  tY = height/2 + 50;
+  saveEmptyFile() //to trigger allow download prompt
+  saveEmptyFile()
+
+  frameRate(FPS);
+  createCanvas(window.innerWidth,window.innerHeight);
+  
+  subjectID = window.prompt("Subject ID");
+  init();
+
+  doneButton = createButton('Go again');
+  doneButton.position(width/2-50, height/2);
+  doneButton.mousePressed(playAgain); 
+  doneButton.size(100,50);
+  doneButton.hide();
 }
 
 function draw() {
@@ -61,7 +67,7 @@ function draw() {
     text("Move the stick",width/2,height/2-100);
   }
   else if(!gameStarted){
-    text("press the LZ button to start",width/2,height/2-200)
+    text("press the LZ button to start",width/2,height/2+100)
     drawTriangle(false);
     drawBall(false);
     if(gamepad.buttons[6].pressed){
@@ -77,12 +83,78 @@ function draw() {
     measureError();
   }
   else{
-    stopRecording(); //stop recording video\\ 
+    stopRecording(); //stop recording video 
     saveStatsFile();
     console.log("mean error "+ avgArr(errorList))
-    text("done",width/2,height/2-200);
-    noLoop(); 
+    text("Done",width/2,height/2-200);
+    doneButton.show();
+    noLoop();
   }
+}
+
+function playAgain(){
+  doneButton.hide();
+  init();
+  loop();
+}
+
+function init(){
+
+  elapsedFrames = 0;
+  errorList = [];
+  joyConnected = false;
+  gameStarted = false;
+  timeTrialMode = false;
+
+  bX = width/2;
+  bY = height/5;
+  tX = width/2;
+  tY = height/5 + 130;
+
+  platIn='NA';
+  while(platIn=='NA'){
+    platIn = window.prompt("Platform: none/and/app");
+    if(platIn.toLowerCase()=='and'){ platformID="AA"}
+    else if(platIn.toLowerCase()=='app'){platformID="CP"}
+    else if(platIn.toLowerCase()=='none'){platformID="NO"}
+    else{
+      alert('!!! Platfrom unknown: ' + platIn);
+      platIn='NA'}
+  }
+  
+  taskin='na';
+  if(platformID=='NO'){
+    while(taskin=='na'){
+      taskin = window.prompt('task: test/con');
+      if(taskin.toLowerCase()=='con'){ taskID='t0'}
+      else if(taskin.toLowerCase()=='test'){taskID='te'}
+      else{
+        alert('!!! task unknown: ' + taskin);
+        taskin='na'}
+    }
+
+  }
+  else{
+    while(taskin=='na'){
+      taskin = window.prompt('task: nav/mus/call');
+      if(taskin.toLowerCase()=='nav'){taskID='t1'}
+      else if(taskin.toLowerCase()=='mus'){taskID='t2'}
+      else if(taskin.toLowerCase()=='call'){taskID='t3'}
+      else{
+        alert('!!! task unknown: ' + taskin);
+        taskin='na'}
+    }
+  }
+
+  if(platformID=='NO'){
+    timeTrialMode = true;
+  }
+  else{
+    timeTrialMode = false;
+  }
+
+  videoRecorder = new p5.VideoRecorder(capture); //https://github.com/calebfoss/p5.videorecorder
+  videoRecorder.onFileReady = saveVideo;
 }
 
 function shouldGameStop(){
@@ -95,7 +167,6 @@ function shouldGameStop(){
     }
     return true;
   }
-  //if() button or spacebar is pressed
 }
 
 function measureError(){
@@ -105,7 +176,7 @@ function measureError(){
 
 function drawTriangle(move){
   if(move){
-    let speed = 1/75 * width;
+    let speed = 1/100 * width;
     let [xIn, yIn] = gamepad.axes;
     tX = tX + speed*(xIn);
     tX = constrain(tX, 0, width);
@@ -148,7 +219,6 @@ function complexCurve(t){
 
 function assignGamepadById(gamepadId) {
   const gamepads = navigator.getGamepads();
-  console.log(gamepads);
   for (let i = 0; i < gamepads.length; i++) {
     const gamepad = gamepads[i];
     if (gamepad && gamepad.id.includes(gamepadId)) {
@@ -188,6 +258,20 @@ function saveStatsFile() {
   let l2 = (elapsedFrames/FPS) + ' ' + avgArr(errorList);
   let l3 = errorList.toString();
   let text = l1 + '\n' + l2 + '\n' + l3;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+
+
+function saveEmptyFile() { 
+  let filename = '000000empty.txt';
+  let text = 'just an empty file';
   const blob = new Blob([text], { type: 'text/plain' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
