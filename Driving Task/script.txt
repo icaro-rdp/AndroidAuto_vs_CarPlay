@@ -13,8 +13,9 @@
 
     NOTE: ??*sign informed consent*??
 
-    The experiment will consists in a series of tasks, in which we are going to ask you to play a game on the pc
-    using a joystick, at the same time we are also going to ask you to perform some tasks on the screen of the car.
+    The experiment will consists in a series of trials.
+    In each trial, we will ask you to play a game on the screen in front of you using a joystick.
+    At the same time we are also going to ask you to perform some tasks on the screen of the car.
 
     Any questions?
 
@@ -29,13 +30,13 @@
     the ball moves randomly from side to side,
     you control the triangle, 
     and you can move it from side to side with the joystick.
-    your goal is to follow tha ball as close as possible for the whole time.
+    your goal is to move the triangle so that it always stays under the ball.
 
     Do you have any questions?
 
     Ok let's start with some practice runs, to get you familiar with the game.
     Hold the controller with your left hand. (!!!!!IMPORTANT!!!!)
-    The game lasts for 30 seconds. Follow the ball, do the best you can.
+    The game lasts for 45 seconds. Follow the ball, do the best you can.
 
     Ok, let's do it again
 
@@ -43,18 +44,33 @@
 
 3. CONTROL
 
-    Ok, this the first real task, just do the same as bfore,
-    only difference, this time we will record your score.
+    Ok, let's do it again one last time, this time we will record your score.
 
 4. TASKS
 
-    Ok, perfect, 
-    now we will ask you to do the same thing, 
-    but at the same time we will also ask you execute some tasks on this touch-screen.
-    You have no time limit now.
+    Ok, 
+    now I'll ask you to do the same thing, 
+    however now, at the same time we will also need you execute some tasks on this touch-screen.
+    Now you have no time limit.
+    Any questions?
+
+    NOTE: what do we do if the guy asks for help/asks questions during the task?
+    NOTE: what do we do if the guy makes a mistake?
 
 TASK: NAVIGATION
 
+    The tas is this:
+        You are traveling to Rome but don't know the way to get there.
+        //then add a stop going through Milan
+        or
+        //avoiding tolls 
+
 TASK: MUSIC
 
+   The task is this:
+        You want to play a song from the playlist "Favourites" //maybe just say from a playlist (general)??
+
 TASK CALL
+
+    The task is this:
+        You want to call your friend Bill Gates
