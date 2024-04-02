@@ -27,9 +27,10 @@ for file in os.listdir(file_paths):
         gaze_analysis_data = gaze_analysis(gaze_data,threshold)
         distracting_gazes_count = count_distracting_gazes(gaze_analysis_data)
         
-        summary_df = gaze_analysis_data["gaze_value"].describe().to_frame().T
+        summary_df = gaze_analysis_data["gaze_value"].describe()[["mean","std","min","25%","50%","75%","max"]].to_frame().transpose()
         summary_df.insert(0, "ID", file.split(".")[0])
         summary_df.insert(1,"distracting_gazes_count", distracting_gazes_count)
+
         final_csv = pd.concat([final_csv, summary_df])
 
 final_csv.to_csv("gaze_analysis/gaze_analysis_summary.csv", index=False)
