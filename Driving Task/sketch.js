@@ -80,7 +80,7 @@ function draw() {
     measureError();
   } else {
     stopRecording(); //stop recording video
-    saveStatsFile();
+    saveStatsFileJson();
     console.log("mean error " + avgArr(errorList));
     text("Done", width / 2, height / 2 - 200);
     doneButton.show();
