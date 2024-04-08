@@ -274,6 +274,7 @@ function saveStatsFileJson() {
     subjectID: subjectID,
     platformID: platformID,
     taskID: taskID,
+    average_error: avgArr(errorList),
     errors_by_frame: errorList,
   };
   let text = JSON.stringify(data);
