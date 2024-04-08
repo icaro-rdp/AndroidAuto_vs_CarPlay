@@ -1,3 +1,3 @@
-subjectID,platformID,taskID,distracting_gazes_count,mean,std,min,25%,50%,75%,max,average_error
+subjectID,platformID,taskID,distracting_gazes_count,mean,std,min,25%,50%,75%,max,average_game_error
 01,AA,T1,38,0.6185002396166135,0.3648962338651631,0.000524,0.263221,0.76558,0.934504,0.998127,0.44
 01,AA,T2,38,0.6185002396166135,0.3648962338651631,0.000524,0.263221,0.76558,0.934504,0.998127,0.34
