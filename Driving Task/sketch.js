@@ -274,6 +274,7 @@ function saveStatsFileJson() {
     subjectID: subjectID,
     platformID: platformID,
     taskID: taskID,
+    time_on_task: elapsedFrames / FPS,
     average_game_error: avgArr(errorList),
     errors_by_frame: errorList,
   };
