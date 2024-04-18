@@ -1,6 +1,6 @@
 let bX;
 let bY;
-let ball_r = 60;
+let ball_d = 60;
 let tX;
 let tY;
 let tri_h = 80;
@@ -20,7 +20,7 @@ let videoRecorder;
 let capture;
 let doneButton;
 
-let subjectID;
+let subjectID = undefined;
 let platformID;
 let taskID;
 
@@ -39,7 +39,10 @@ function setup() {
   frameRate(FPS);
   createCanvas(window.innerWidth, window.innerHeight);
 
-  subjectID = window.prompt("Subject ID");
+  while(subjectID==undefined){
+    subjectID = window.prompt("Subject ID");
+  }
+
   init();
 
   doneButton = createButton("Go again");
@@ -57,7 +60,9 @@ function draw() {
   textAlign(CENTER, CENTER);
   fill(230);
 
-  image(capture, 0, 0, 320, 240);
+  if(!gamepad){
+    image(capture, 0, 0, 320, 240);
+  }
 
   gamepad = assignGamepadById("Joy-Con L+R");
 
@@ -65,7 +70,7 @@ function draw() {
     text("Connect gamepads", width / 2, height / 2 - 200);
     text("Move the stick", width / 2, height / 2 - 100);
   } else if (!gameStarted) {
-    text("press the LZ button to start", width / 2, height / 2 + 100);
+    text("press the ZL button to start", width / 2, height / 2 + 100);
     drawTriangle(false);
     drawBall(false);
     if (gamepad.buttons[6].pressed) {
@@ -84,6 +89,7 @@ function draw() {
     console.log("mean error " + avgArr(errorList));
     text("Done", width / 2, height / 2 - 200);
     doneButton.show();
+    doneButton.elt.focus();
     noLoop();
   }
 }
@@ -109,7 +115,10 @@ function init() {
   platIn = "NA";
   while (platIn == "NA") {
     platIn = window.prompt("Platform: none/and/app");
-    if (platIn.toLowerCase() == "and") {
+    if(platIn == undefined){
+      platIn = 'NA'
+    }
+    else if (platIn.toLowerCase() == "and") {
       platformID = "AA";
     } else if (platIn.toLowerCase() == "app") {
       platformID = "CP";
@@ -123,9 +132,12 @@ function init() {
 
   taskin = "na";
   if (platformID == "NO") {
-    while (taskin == "na") {
+    while (taskin == "na" || taskin == undefined) {
       taskin = window.prompt("task: test/con");
-      if (taskin.toLowerCase() == "con") {
+      if(taskin == undefined){
+        taskin = 'NA'
+      }
+      else if (taskin.toLowerCase() == "con") {
         taskID = "t0";
       } else if (taskin.toLowerCase() == "test") {
         taskID = "te";
@@ -135,9 +147,12 @@ function init() {
       }
     }
   } else {
-    while (taskin == "na") {
+    while (taskin == "na" || taskin == undefined) {
       taskin = window.prompt("task: nav/mus/call");
-      if (taskin.toLowerCase() == "nav") {
+      if(taskin == undefined){
+        taskin = 'NA'
+      }
+      else if (taskin.toLowerCase() == "nav") {
         taskID = "t1";
       } else if (taskin.toLowerCase() == "mus") {
         taskID = "t2";
@@ -150,7 +165,7 @@ function init() {
     }
   }
 
-  if (platformID == "NO") {
+  if (platformID == "NO"  || platformID == undefined) {
     timeTrialMode = true;
   } else {
     timeTrialMode = false;
@@ -179,12 +194,17 @@ function measureError() {
 
 function drawTriangle(move) {
   if (move) {
-    let speed = (1 / 100) * width;
+    let speed = (1 / 125) * width;
     let [xIn, yIn] = gamepad.axes;
     tX = tX + speed * xIn;
     tX = constrain(tX, 0, width);
   }
-  fill(0, 255, 255);
+  if(tX<bX+ball_d/2 && tX>bX-ball_d/2){
+    fill(0,255,0)
+  }
+  else{
+    fill(255, 0, 255);
+  }
   triangle(tX - tri_b / 2, tY, tX, tY - tri_h, tX + tri_b / 2, tY);
 }
 
@@ -194,8 +214,8 @@ function drawBall(move) {
     bX = complexCurve(elapsedFrames - staticTime);
   }
 
-  fill(255, 0, 255);
-  circle(bX, bY, ball_r);
+  fill(0, 255, 255);
+  circle(bX, bY, ball_d);
 }
 
 function drawTrace() {
@@ -207,6 +227,7 @@ function drawTrace() {
 }
 
 function complexCurve(t) {
+  portionOfScreen = 0.75;
   t = t / 40; //scaling
   hz1 = 0.07;
   hz2 = 0.17;
@@ -215,7 +236,7 @@ function complexCurve(t) {
   b = sin(2 * PI * hz2 * t);
   c = sin(2 * PI * hz3 * t);
   y = (a + b + c) / 3;
-  return (y * width) / 2 + width / 2;
+  return (y * width*portionOfScreen) / 2 + width / 2;
 }
 
 function assignGamepadById(gamepadId) {
@@ -300,3 +321,10 @@ function saveEmptyFile() {
   document.body.removeChild(a);
 }
 
+document.addEventListener("keydown",function(e){
+  var charCode = e.charCode || e.keyCode || e.which;
+  if (charCode == 27){
+       alert("Escape is not allowed!");
+      return false;
+  }
+});
