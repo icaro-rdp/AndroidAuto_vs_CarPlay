@@ -39,13 +39,19 @@ for file in os.listdir(file_paths):
         
         gaze_analysis_data = gaze_analysis(gaze_data,threshold)
         distracting_gazes_count = count_distracting_gazes(gaze_analysis_data)
+        percentage_of_distracting_gazes = gaze_analysis_data["distracted"].value_counts(normalize=True)["yes"].round(3)
+        amount_of_seconds_distracted = percentage_of_distracting_gazes * len(gaze_data) / 30
+        
         
         summary_df = gaze_analysis_data["gaze_value"].describe()[["mean","std","min","25%","50%","75%","max"]].to_frame().transpose()
         file_id = file.split(".")[0]
         summary_df.insert(0, "subjectID", file_id.split("_")[0])
         summary_df.insert(1, "platformID", file_id.split("_")[1])
         summary_df.insert(2, "taskID", file_id.split("_")[2])
-        summary_df.insert(3,"distracting_gazes_count", distracting_gazes_count)
+        summary_df.insert(3,"video_duration", len(gaze_data)/30)
+        summary_df.insert(4,"distracting_gazes_count", distracting_gazes_count)
+        summary_df.insert(5, "percentage_of_distracting_gazes", percentage_of_distracting_gazes)
+        summary_df.insert(6, "amount_of_seconds_distracted", amount_of_seconds_distracted)
 
         gazes_df = pd.concat([gazes_df, summary_df])
         
