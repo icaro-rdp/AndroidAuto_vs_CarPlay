@@ -29,6 +29,8 @@ def main():
                 game_data = json.load(json_file)
                 game_data.popitem()
                 game_df = pd.DataFrame.from_dict(game_data, orient='index').T
+                # uppercase of the taskID
+                game_df["taskID"] = game_df["taskID"].apply(lambda x: x.upper())
                 games_df = pd.concat([games_df, game_df])
 
     # Reading the gaze data from the files and analyzing the gaze data             
@@ -58,7 +60,7 @@ def main():
             gazes_df = pd.concat([gazes_df, summary_df])
             
 
-    summary_df = pd.merge(gazes_df, games_df, on=["subjectID","platformID","taskID"], how="left").drop_duplicates(subset=["subjectID","platformID","taskID"])
+    summary_df = pd.merge(gazes_df, games_df, on=["subjectID","platformID","taskID"], how="left").drop_duplicates(subset=["subjectID","platformID","taskID"]).sort_values(by=["subjectID","platformID","taskID"])
     summary_df.to_csv("gaze_analysis/analysis_outputs/gaze_analysis_data.csv", index=False)
             
 if __name__ == "__main__":
