@@ -32,7 +32,7 @@ def main():
                 games_df = pd.concat([games_df, game_df])
 
     # Reading the gaze data from the files and analyzing the gaze data             
-    file_paths = "gaze_analysis/data"
+    file_paths = "gaze_analysis/gaze_data"
     threshold = 0.9
     gazes_df = pd.DataFrame()
     for file in os.listdir(file_paths):
