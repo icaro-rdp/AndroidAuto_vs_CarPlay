@@ -1,14 +1,14 @@
 import pandas as pd
 
 
-
+# Function to transform possible NaN values in a column to the average of the column if the column is numeric
 def transform_NaN_to_col_avg(df, col_name):
     if pd.api.types.is_numeric_dtype(df[col_name]):
         col_avg = df[col_name].mean()
         df[col_name] = df[col_name].fillna(col_avg)
     return df
 
-
+# Function to transform the questionnaire with headers to a new questionnaire with the columns transformed to the correct format
 def transform_questionnaire_df(questionnaire_df):
     
     participants_columns = ["Name","Surname","Age","Gender","Phone_type","license_years","AA_fam","CP_fam",]
@@ -17,7 +17,7 @@ def transform_questionnaire_df(questionnaire_df):
     participants_df.columns = participants_columns
 
     
-    platforms_columns = ["eou_1","eou_2","eou_3","umux_1","umux_2","umux_3","umux_4","umux_5","umux_6","umux_7","umux_8","umux_9","umux_10"]
+    platforms_columns = ["eou_1","eou_2","eou_3","sus_1","sus_2","sus_3","sus_4","sus_5","sus_6","sus_7","sus_8","sus_9","sus_10"]
 
     android_df = questionnaire_df.iloc[:, 11:24]
     android_df.columns = platforms_columns
