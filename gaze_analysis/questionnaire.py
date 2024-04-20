@@ -38,7 +38,7 @@ def main():
 
     transformed_questionnaire_df = transform_questionnaire_df(questionnaire_df)
 
-    transformed_questionnaire_df.to_csv("gaze_analysis/questionnaire_data/transformed_questionnaire.csv", index=False)
+    transformed_questionnaire_df.to_csv("gaze_analysis/analysis_outputs/transformed_questionnaire.csv", index=False)
     
 
 if __name__ == "__main__":

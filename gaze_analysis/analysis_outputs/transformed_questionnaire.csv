@@ -1,0 +1,28 @@
+Name,Surname,Age,Gender,Phone_type,license_years,AA_fam,CP_fam,eou_1,eou_2,eou_3,sus_1,sus_2,sus_3,sus_4,sus_5,sus_6,sus_7,sus_8,sus_9,sus_10,eou_1,eou_2,eou_3,sus_1,sus_2,sus_3,sus_4,sus_5,sus_6,sus_7,sus_8,sus_9,sus_10
+Andrea,Moscara,24,Male,Android,2-4,Never used,Never used,6,3,2,2,5,2,1,3,2,2,3,2,3,3,2,2,4,1,5,1,5,1.0,5,1,4,1
+Marianna,Lombardi,24,Female,Android,2-4,Never used,Never used,3,1,1,5,1,5,1,5,1,5,1,5,2,6,2,3,3,3,2,1,4,1.0,3,2,1,2
+Engrid,Xhepaliu,22,Male,Android,2-4,Used occasionally,Never used,7,5,3,4,2,4,1,5,1,5,1,3,3,5,2,2,4,2,4,1,5,,5,1,4,3
+Giuseppe Pio,Mangiacotti,20,Male,Android,-1,Never used,Never used,5,5,3,4,2,4,1,5,2,5,2,4,2,6,6,7,2,4,4,2,4,1.0,4,4,1,5
+Sofija,Jurane,23,Female,Apple,5-10,Never used,Used occasionally,5,1,3,4,1,5,1,4,1,5,1,4,1,5,1,6,4,4,4,1,5,1.0,5,1,2,1
+Daniele,Pala,23,Male,Apple,2-4,Never used,Used occasionally,5,6,7,5,3,4,1,5,1,4,2,4,1,7,2,6,3,4,2,1,4,2.0,4,4,2,1
+Leonardo,Marangoni,19,Male,Android,0-1,Used often,Never used,5,3,4,4,2,4,1,4,2,4,1,3,1,4,3,4,3,3,3,1,3,2.0,4,3,3,2
+Elisa ,Caria,19,Female,Apple,0-1,Never used,Used occasionally,5,4,5,4,2,4,1,4,1,4,2,4,1,6,4,6,3,2,4,1,4,4.0,4,2,4,1
+Sara,Di Ianni,19,Female,Apple,0-1,Never used,Used occasionally,7,5,2,1,3,4,3,3,2,5,1,1,3,6,5,1,4,2,3,1,3,3.0,5,1,4,2
+Aurora,La Rosa,20,Female,Android,2-4,Never used,Never used,3,2,2,4,4,5,2,3,2,4,2,1,1,6,4,5,2,3,3,1,2,2.0,4,2,2,1
+Desiree,Boscaro,20,Female,Apple,2-4,Used occasionally,Never used,2,4,3,2,1,3,1,4,3,4,2,4,2,6,1,3,2,3,2,1,2,1.0,2,2,2,4
+Gabriele,Tangerini,32,Male,Android,5-10,Used occasionally,Used occasionally,6,4,3,3,4,2,2,2,4,3,4,3,2,5,6,6,4,2,5,1,3,3.0,3,2,4,1
+Teresio,Radaelli,27,Male,Android,5-10,Used occasionally,Never used,3,5,1,5,2,5,1,3,2,4,1,4,1,4,3,4,4,2,5,1,3,1.0,4,2,5,1
+Thinh,Bui,27,Male,Apple,-1,Never used,Never used,4,2,2,5,1,4,1,5,2,5,1,5,2,6,3,5,5,2,4,1,4,2.0,4,2,4,2
+Konstantin,Koriakin,23,Male,Android,-1,Used occasionally,Never used,3,5,2,4,2,4,1,4,2,3,2,3,2,3,2,1,5,1,4,2,5,2.0,4,1,5,1
+Denis,Gurabardhi,23,Male,Android,2-4,Never used,Never used,6,4,3,3,1,4,1,4,2,5,2,3,2,2,6,5,2,1,4,1,4,2.0,5,2,2,2
+Luca Andres,Mettifogo Retamal,23,Male,Apple,5-10,Used occasionally,Used occasionally,4,3,5,3,3,4,2,2,3,3,2,4,2,5,6,6,5,2,2,2,4,2.0,4,2,5,1
+Edoardo,Comin,23,Male,Apple,2-4,Used occasionally,Used often,3,3,2,3,2,4,1,4,2,3,1,4,2,3,2,5,4,2,3,1,3,2.0,3,1,2,2
+Sagi,Anarbek,22,Male,Apple,-1,Never used,Never used,7,3,5,2,4,2,1,3,4,2,5,2,4,7,3,5,3,2,3,1,4,1.0,4,3,4,4
+Fosca ,N’Guessan,21,Female,Android,-1,Never used,Never used,3,2,1,1,2,4,1,3,3,5,2,3,2,6,1,4,1,3,3,2,2,4.0,4,3,2,2
+Paola,Minerva,23,Female,Apple,5-10,Used occasionally,Used occasionally,7,5,4,4,2,3,2,4,2,4,2,3,2,5,1,3,3,2,4,1,4,2.0,5,1,5,1
+Valeria,Baccaro,23,Female,Apple,5-10,Used occasionally,Never used,6,2,2,4,2,4,3,4,3,4,2,4,2,7,2,3,3,2,3,3,2,2.0,4,3,3,2
+Lorenzo,Paravano,23,Male,Apple,2-4,Never used,Used occasionally,6,2,3,4,2,4,1,3,3,2,2,4,1,3,2,2,4,2,4,1,4,3.0,2,2,5,1
+Sara,Piccinini,20,Female,Apple,2-4,Never used,Used occasionally,6,4,2,3,4,3,1,2,3,2,2,3,1,7,6,4,4,3,3,1,4,1.0,5,4,2,2
+Laura,Trivellato,20,Female,Android,-1,Never used,Never used,6,4,2,3,2,2,1,2,4,3,3,2,2,5,3,5,2,3,2,2,2,4.0,3,4,2,2
+Marsild,Spahiu,24,Male,Apple,5-10,Never used,Never used,4,2,2,4,1,4,1,4,1,4,1,4,1,6,3,5,4,1,4,1,4,1.0,4,1,4,2
+Miriam,Ciampi,20,Female,Android,2-4,Used occasionally,Never used,6,4,1,4,1,4,1,4,1,4,1,4,1,2,2,3,4,1,4,1,4,1.0,4,4,4,1
