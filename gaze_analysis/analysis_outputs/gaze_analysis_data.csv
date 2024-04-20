@@ -1,0 +1,3 @@
+subjectID,platformID,taskID,video_duration,distracting_gazes_count,percentage_of_distracting_gazes,amount_of_seconds_distracted,mean,std,min,25%,50%,75%,max,average_game_error,time_one_task
+00,AA,T1,31.3,38,0.668,20.908400000000004,0.6185002396166135,0.3648962338651633,0.000524,0.263221,0.76558,0.934504,0.998127,,
+00,AA,T2,31.3,38,0.668,20.908400000000004,0.6185002396166135,0.3648962338651633,0.000524,0.263221,0.76558,0.934504,0.998127,,
