@@ -35,7 +35,7 @@ def main():
 
     # Reading the gaze data from the files and analyzing the gaze data             
     file_paths = "gaze_analysis/gaze_data"
-    threshold = 0.9
+    threshold = 0.5
     gazes_df = pd.DataFrame()
     for file in os.listdir(file_paths):
         if file.endswith(".txt"):
@@ -43,7 +43,7 @@ def main():
             
             gaze_analysis_data = gaze_analysis(gaze_data,threshold)
             distracting_gazes_count = count_distracting_gazes(gaze_analysis_data)
-            percentage_of_distracting_gazes = gaze_analysis_data["distracted"].value_counts(normalize=True)["yes"].round(3)
+            percentage_of_distracting_gazes = gaze_analysis_data["distracted"].value_counts(normalize=True)["yes"].round(3) if "yes" in gaze_analysis_data["distracted"].value_counts(normalize=True) else 0 
             amount_of_seconds_distracted = percentage_of_distracting_gazes * len(gaze_data) / 30
             
             
