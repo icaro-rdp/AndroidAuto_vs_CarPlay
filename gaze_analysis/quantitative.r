@@ -1,7 +1,7 @@
 # Import data
 df <- read.csv("gaze_analysis_data.csv")
 
-tot <- df$time_on_task
+tot <- df[df$subjectID != "26", ]$time_on_task
 
 upper_bound <- boxplot.stats(tot)$stats[5]
 lower_bound <- boxplot.stats(tot)$stats[1]
