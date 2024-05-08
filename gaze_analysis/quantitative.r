@@ -37,8 +37,11 @@ ggplot(df, aes(x = platformID, y = time_on_task, fill = taskID)) +
 ggsave("time_on_task_boxplot.png")
 
 # Check if CP is faster than AA in T3
-t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T3"], df$time_on_task[df$platformID == "CP" & df$taskID == "T3"], alternative = "less", paired = TRUE, var.equal = FALSE)
+t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$time_on_task[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T2"], df$time_on_task[df$platformID == "CP" & df$taskID == "T2"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T3"], df$time_on_task[df$platformID == "CP" & df$taskID == "T3"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
 # Anova for time on task by platform and task
 aov_time_on_task <- aov(time_on_task ~ platformID * taskID, data = df)
-print(summary(aov_time_on_task))
