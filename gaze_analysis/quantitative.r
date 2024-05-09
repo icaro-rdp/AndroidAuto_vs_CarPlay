@@ -54,7 +54,7 @@ aov_game_error <- aov(average_game_error ~ platformID * taskID, data = df)
 
 # Check cor btw time on task and game error
 cor(df$time_on_task, df$average_game_error)
-
+plot(df$time_on_task, df$average_game_error)
 # Check task and game error by platform
 cor(df$time_on_task[df$platformID == "AA"], df$average_game_error[df$platformID == "AA"])
 
