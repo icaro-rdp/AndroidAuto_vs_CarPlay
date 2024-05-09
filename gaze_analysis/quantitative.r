@@ -50,3 +50,19 @@ t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T3"], df$time_on_ta
 
 # Anova for time on task by platform and task
 aov_time_on_task <- aov(time_on_task ~ platformID * taskID, data = df)
+aov_game_error <- aov(average_game_error ~ platformID * taskID, data = df)
+
+# Check cor btw time on task and game error
+cor(df$time_on_task, df$average_game_error)
+
+# Check task and game error by platform
+cor(df$time_on_task[df$platformID == "AA"], df$average_game_error[df$platformID == "AA"])
+
+cor(df$time_on_task[df$platformID == "CP"], df$average_game_error[df$platformID == "CP"])
+
+# Check cor btw time on task and game error by task
+cor(df$time_on_task[df$taskID == "T1"], df$average_game_error[df$taskID == "T1"])
+
+cor(df$time_on_task[df$taskID == "T2"], df$average_game_error[df$taskID == "T2"])
+
+cor(df$time_on_task[df$taskID == "T3"], df$average_game_error[df$taskID == "T3"])
