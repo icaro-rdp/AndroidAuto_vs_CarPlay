@@ -17,7 +17,7 @@ lower_bound <- boxplot.stats(tot)$stats[1]
 ggplot(df, aes(x = platformID, y = time_on_task)) +
     geom_boxplot(fill = c("skyblue", "lightgreen"), color = c("darkblue", "darkgreen")) +
     xlab("Platform") +
-    ylim(0, 100) +
+    ylim(0, 150) +
     ylab("Time on task") +
     ggtitle("Time on task by platform")
 
@@ -26,7 +26,7 @@ ggsave("time_on_task_plat.png")
 ggplot(df, aes(x = taskID, y = time_on_task)) +
     geom_boxplot(fill = c("#F7766D", "#00BB38", "#629DFF"), color = c("darkred", "darkgreen", "darkblue")) +
     xlab("Task") +
-    ylim(0, 100) +
+    ylim(0, 150) +
     ylab("Time on task") +
     ggtitle("Time on task by task")
 
@@ -36,7 +36,7 @@ ggsave("time_on_task_by_task.png")
 ggplot(df, aes(x = platformID, y = time_on_task, fill = taskID)) +
     geom_boxplot() +
     xlab("Platform") +
-    ylim(0, 100) +
+    ylim(0, 150) +
     ylab("Time on task") +
     ggtitle("Time on task by platform and task")
 
