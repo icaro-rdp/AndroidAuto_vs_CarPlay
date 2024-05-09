@@ -2,6 +2,7 @@ library(car)
 library(carData)
 library(ggplot2)
 library(ggcorrplot)
+library(reshape2)
 # Import data
 setwd("/Users/icaroredepaolini/Personale/uni/AndroidAuto_vs_CarPlay/gaze_analysis/analysis_outputs")
 
@@ -43,10 +44,14 @@ ggplot(df, aes(x = platformID, y = time_on_task, fill = taskID)) +
 ggsave("time_on_task_boxplot.png")
 
 # Anova for time on task by platform and task
+# Before performing the test, we need to transform the data to a wide format using the reshape2 package in order to have 2 factors (platformID and taskID) and the time on task as the dependent variable (value.var)
 
-aov_time_on_task <- Anova(lm(time_on_task ~ platformID * taskID, data = df), type = "III")
+reshaped_df <- dcast(df, subjectID ~ platformID + taskID, value.var = "time_on_task")
 
-aov_game_error <- Anova(lm(average_game_error ~ platformID * taskID, data = df), type = "III")
+print(reshaped_df)
+aov_time_on_task <- Anova(lm(AA_T1 + AA_T2 + AA_T3 + CP_T1 + CP_T2 + CP_T3 ~ 1, data = reshaped_df), type = "III")
+print(aov_time_on_task)
+
 
 t_T1 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$time_on_task[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
