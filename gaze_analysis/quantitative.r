@@ -1,8 +1,8 @@
-library(car)
-library(carData)
 library(ggplot2)
 library(ggcorrplot)
-library(reshape2)
+library(ez)
+library(dplyr)
+
 # Import data
 setwd("/Users/icaroredepaolini/Personale/uni/AndroidAuto_vs_CarPlay/gaze_analysis/analysis_outputs")
 
@@ -10,9 +10,6 @@ df <- read.csv("gaze_analysis_data.csv")
 
 df <- df[df$taskID != "T0", ]
 tot <- df[df$subjectID != "26", ]$time_on_task
-
-upper_bound <- boxplot.stats(tot)$stats[5]
-lower_bound <- boxplot.stats(tot)$stats[1]
 
 # Create boxplot for time on task by platform
 ggplot(df, aes(x = platformID, y = time_on_task)) +
@@ -44,14 +41,49 @@ ggplot(df, aes(x = platformID, y = time_on_task, fill = taskID)) +
 ggsave("time_on_task_boxplot.png")
 
 # Anova for time on task by platform and task
-# Before performing the test, we need to transform the data to a wide format using the reshape2 package in order to have 2 factors (platformID and taskID) and the time on task as the dependent variable (value.var)
 
-reshaped_df <- dcast(df, subjectID ~ platformID + taskID, value.var = "time_on_task")
+df_anova <- df[, c("subjectID", "platformID", "taskID", "time_on_task")]
+colnames(df_anova) <- c("subjectID", "platform", "task", "time_on_task")
 
-print(reshaped_df)
-aov_time_on_task <- Anova(lm(AA_T1 + AA_T2 + AA_T3 + CP_T1 + CP_T2 + CP_T3 ~ 1, data = reshaped_df), type = "III")
-print(aov_time_on_task)
+# Convert to factors for ANOVA
+df_anova$subjectID <- as.factor(df_anova$subjectID)
+df_anova$platform <- as.factor(df_anova$platform)
+df_anova$task <- as.factor(df_anova$task)
 
+
+# Library for not reshaping the data
+anova_tot <- ezANOVA(
+    data = df_anova,
+    dv = time_on_task,
+    wid = subjectID,
+    within = .(platform, task)
+)
+
+# create a table with the result of ANOVA and save it as a png
+anova_table <- data.frame("Source" = c("platform", "task", "platform:task"), "p" = c(format(anova_tot$ANOVA$p[1], scientific = FALSE), format(anova_tot$ANOVA$p[2], scientific = FALSE), format(anova_tot$ANOVA$p[3], scientific = FALSE)))
+png("anova_table.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(anova_table)
+dev.off()
+
+# plot 3 windows of boxplots for the time on task variable by platform
+ggplot(df_anova, aes(x = platform, y = time_on_task, fill = task)) +
+    geom_boxplot() +
+    facet_wrap(~task) +
+    xlab("Platform") +
+    ylab("Time on task") +
+    ggtitle("Time on task by platform and task")
+
+ggsave("time_on_task_boxplot_facet.png")
+
+# plot the interaction between platform and task for time on task
+ggplot(df_anova, aes(x = platform, y = time_on_task, color = task)) +
+    geom_point() +
+    geom_line(aes(group = task)) +
+    xlab("Platform") +
+    ylab("Time on task") +
+    ggtitle("Time on task by platform and task")
+
+ggsave("time_on_task_interaction.png")
 
 t_T1 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$time_on_task[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 

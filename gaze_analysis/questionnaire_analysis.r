@@ -15,7 +15,7 @@ calculateSus <- function(df) {
     sus_odd <- rowSums(df[, seq(1, ncol(df), 2)]) - 5
     sus_even <- 25 - rowSums(df[, seq(2, ncol(df), 2)])
     sus_total <- (sus_odd + sus_even) * 2.5
-    return(list("SUS" = mean(sus_total), "SD" = round(sd(sus_total), 2)))
+    return(list("SUS" = sus_total, "MEAN" = mean(sus_total), "SD" = round(sd(sus_total), 2)))
 }
 
 SUS_AA <- calculateSus(AA_SUS)
@@ -23,16 +23,16 @@ SUS_CP <- calculateSus(CP_SUS)
 
 calculateEou <- function(df) {
     eou <- rowSums(df)
-    return(list("EOU" = mean(eou), "SD" = round(sd(eou), 2)))
+    return(list("EOU" = eou, "MEAN" = mean(eou), "SD" = round(sd(eou), 2)))
 }
 
 EOU_AA <- calculateEou(AA_EOU)
 EOU_CP <- calculateEou(CP_EOU)
 
 # Create a table with the results
-SUS_table <- data.frame("Platform" = c("AA", "CP"), "SUS" = c(SUS_AA$SUS, SUS_CP$SUS), "SD" = c(SUS_AA$SD, SUS_CP$SD))
+SUS_table <- data.frame("Platform" = c("AA", "CP"), "SUS" = c(SUS_AA$MEAN, SUS_CP$MEAN), "SD" = c(SUS_AA$SD, SUS_CP$SD))
 
-EOU_table <- data.frame("Platform" = c("AA", "CP"), "EOU" = c(EOU_AA$EOU, EOU_CP$EOU), "SD" = c(EOU_AA$SD, EOU_CP$SD))
+EOU_table <- data.frame("Platform" = c("AA", "CP"), "EOU" = c(EOU_AA$MEAN, EOU_CP$MEAN), "SD" = c(EOU_AA$SD, EOU_CP$SD))
 
 png("SUS_table.png", width = 1000, height = 1000, res = 350, bg = "white")
 grid.table(SUS_table)
@@ -68,3 +68,14 @@ plot_SUS_scores <- function(df, title) {
 
 plot_SUS_scores(AA_SUS, "Android Auto SUS scores")
 plot_SUS_scores(CP_SUS, "Apple Carplay SUS scores")
+
+t_test_SUS <- t.test(SUS_AA$SUS, SUS_CP$SUS, paired = TRUE, alternative = "two.sided")
+
+
+t_test_EOU <- t.test(EOU_AA$EOU, EOU_CP$EOU, paired = TRUE, alternative = "two.sided")
+
+
+png("SUS_scores.png", width = 1500, height = 1500, res = 300, bg = "white")
+t_test_table <- data.frame("Variable" = c("SUS", "EOU"), "t-value" = c(t_test_SUS$statistic, t_test_EOU$statistic), "p-value" = c(t_test_SUS$p.value, t_test_EOU$p.value), "mean_AA" = c(SUS_AA$MEAN, EOU_AA$MEAN), "mean_CP" = c(SUS_CP$MEAN, EOU_CP$MEAN))
+grid.table(t_test_table)
+dev.off()
