@@ -16,36 +16,6 @@ df <- df[df$taskID != "T0", ]
 # subtract to each subjectID his own baseline error
 df$average_game_error <- df$average_game_error - baseline$average_game_error[match(df$subjectID, baseline$subjectID)]
 
-
-# Create boxplot for time on task by platform
-ggplot(df, aes(x = platformID, y = time_on_task)) +
-    geom_boxplot(fill = c("skyblue", "lightgreen"), color = c("darkblue", "darkgreen")) +
-    xlab("Platform") +
-    ylim(0, 150) +
-    ylab("Time on task") +
-    ggtitle("Time on task by platform")
-
-ggsave("time_on_task_plat.png")
-# Create boxplot for time on task by task
-ggplot(df, aes(x = taskID, y = time_on_task)) +
-    geom_boxplot(fill = c("#F7766D", "#00BB38", "#629DFF"), color = c("darkred", "darkgreen", "darkblue")) +
-    xlab("Task") +
-    ylim(0, 150) +
-    ylab("Time on task") +
-    ggtitle("Time on task by task")
-
-ggsave("time_on_task_by_task.png")
-
-# Create boxplot for time on task by platform and task
-ggplot(df, aes(x = platformID, y = time_on_task, fill = taskID)) +
-    geom_boxplot() +
-    xlab("Platform") +
-    ylim(0, 150) +
-    ylab("Time on task") +
-    ggtitle("Time on task by platform and task")
-
-ggsave("time_on_task_boxplot.png")
-
 # Anova for time on task by platform and task
 
 task_metrics_df <- df[, c("subjectID", "platformID", "taskID", "time_on_task", "average_game_error")]
@@ -94,15 +64,19 @@ ggplot(task_metrics_df, aes(x = platform, y = time_on_task, fill = task)) +
 
 ggsave("time_on_task_boxplot_facet.png")
 
-# plot the interaction between platform and task for time on task
-ggplot(task_metrics_df, aes(x = platform, y = time_on_task, color = task)) +
-    geom_point() +
-    geom_line(aes(group = task)) +
+ggplot(task_metrics_df, aes(
+    x = platform, y = average_game_error,
+    fill = task
+)) +
+    geom_boxplot() +
+    facet_wrap(~task) +
     xlab("Platform") +
-    ylab("Time on task") +
-    ggtitle("Time on task by platform and task")
+    ylab("Avg game error") +
+    ggtitle("Average game error by platform and task")
 
-ggsave("time_on_task_interaction.png")
+ggsave("avg_game_err_boxplot_facet.png")
+
+
 
 t_T1 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$time_on_task[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
@@ -149,7 +123,7 @@ dev.off()
 # Create a data frame with your correlation values and labels
 cor_data <- data.frame(
     Group = c("Overall", "Platform AA", "Platform CP", "Task T1", "Task T2", "Task T3"),
-    Correlation = c(
+    corr_with_game_error = c(
         cor(df$time_on_task, df$average_game_error),
         cor(df$time_on_task[df$platformID == "AA"], df$average_game_error[df$platformID == "AA"]),
         cor(df$time_on_task[df$platformID == "CP"], df$average_game_error[df$platformID == "CP"]),
@@ -188,7 +162,7 @@ merged_metrics_questionnaire_df$CP_fam <- as.factor(merged_metrics_questionnaire
 
 cor_game_err_sus <- data.frame(
     Group = c("Average AA", "Average CP", "AA T1", "AA T2 ", "AA T3", "CP T1", "CP T2", "CP T3"),
-    Correlation = c(
+    corr_game_err_sus = c(
         cor(merged_metrics_questionnaire_df$SUS_AA, apply(merged_metrics_questionnaire_df[, c("AA_T1", "AA_T2", "AA_T3")], 1, mean)),
         cor(merged_metrics_questionnaire_df$SUS_CP, apply(merged_metrics_questionnaire_df[, c("CP_T1", "CP_T2", "CP_T3")], 1, mean)),
         cor(merged_metrics_questionnaire_df$SUS_AA, merged_metrics_questionnaire_df$AA_T1),
