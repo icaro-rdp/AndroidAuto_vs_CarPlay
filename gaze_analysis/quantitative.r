@@ -3,6 +3,7 @@ library(ggcorrplot)
 library(ez)
 library(dplyr)
 library(gridExtra)
+library(reshape2)
 
 # Import data
 setwd("/Users/icaroredepaolini/Personale/uni/AndroidAuto_vs_CarPlay/gaze_analysis/analysis_outputs")
@@ -47,25 +48,25 @@ ggsave("time_on_task_boxplot.png")
 
 # Anova for time on task by platform and task
 
-df_anova <- df[, c("subjectID", "platformID", "taskID", "time_on_task", "average_game_error")]
-colnames(df_anova) <- c("subjectID", "platform", "task", "time_on_task", "average_game_error")
+task_metrics_df <- df[, c("subjectID", "platformID", "taskID", "time_on_task", "average_game_error")]
+colnames(task_metrics_df) <- c("subjectID", "platform", "task", "time_on_task", "average_game_error")
 
 # Convert to factors for ANOVA
-df_anova$subjectID <- as.factor(df_anova$subjectID)
-df_anova$platform <- as.factor(df_anova$platform)
-df_anova$task <- as.factor(df_anova$task)
+task_metrics_df$subjectID <- as.factor(task_metrics_df$subjectID)
+task_metrics_df$platform <- as.factor(task_metrics_df$platform)
+task_metrics_df$task <- as.factor(task_metrics_df$task)
 
 
 # Library for not reshaping the data
 anova_tot <- ezANOVA(
-    data = df_anova,
+    data = task_metrics_df,
     dv = time_on_task,
     wid = subjectID,
     within = .(platform, task)
 )
 
 anova_game_err <- ezANOVA(
-    data = df_anova,
+    data = task_metrics_df,
     dv = average_game_error,
     wid = subjectID,
     within = .(platform, task)
@@ -84,7 +85,7 @@ grid.table(anova_game_err_table)
 dev.off()
 
 # plot 3 windows of boxplots for the time on task variable by platform
-ggplot(df_anova, aes(x = platform, y = time_on_task, fill = task)) +
+ggplot(task_metrics_df, aes(x = platform, y = time_on_task, fill = task)) +
     geom_boxplot() +
     facet_wrap(~task) +
     xlab("Platform") +
@@ -94,7 +95,7 @@ ggplot(df_anova, aes(x = platform, y = time_on_task, fill = task)) +
 ggsave("time_on_task_boxplot_facet.png")
 
 # plot the interaction between platform and task for time on task
-ggplot(df_anova, aes(x = platform, y = time_on_task, color = task)) +
+ggplot(task_metrics_df, aes(x = platform, y = time_on_task, color = task)) +
     geom_point() +
     geom_line(aes(group = task)) +
     xlab("Platform") +
@@ -159,4 +160,75 @@ cor_data <- data.frame(
 )
 png("cor_tot_game_err_table.png", width = 2000, height = 2000, res = 350, bg = "white")
 grid.table(cor_data)
+dev.off()
+
+questionnaire_data <- read.csv("transformed_questionnaire.csv")
+trimmed_questionnaire_data <- questionnaire_data[1:25, c("Age", "Gender", "Phone_type", "license_years", "AA_fam", "CP_fam")]
+trimmed_questionnaire_data$subjectID <- as.factor(unique(df$subjectID))
+
+sus_eou_data <- read.csv("data_analysis_questionnaire.csv")
+trimmed_sus_eou_data <- sus_eou_data[1:25, ]
+merged_questionnaire_df <- merge(trimmed_sus_eou_data, trimmed_questionnaire_data, by = "subjectID")
+
+
+# Create a df useful for the analysis of the correlation between SUS and game error
+
+task_metrics_df_wide <- dcast(task_metrics_df, subjectID ~ platform + task, value.var = "average_game_error")
+task_metrics_df_wide$subjectID <- as.factor(task_metrics_df_wide$subjectID)
+
+merged_metrics_questionnaire_df <- merge(task_metrics_df_wide, merged_questionnaire_df, by = "subjectID")
+
+merged_metrics_questionnaire_df$subjectID <- as.factor(merged_metrics_questionnaire_df$subjectID)
+merged_metrics_questionnaire_df$Phone_type <- as.factor(merged_metrics_questionnaire_df$Phone_type)
+merged_metrics_questionnaire_df$Gender <- as.factor(merged_metrics_questionnaire_df$Gender)
+merged_metrics_questionnaire_df$AA_fam <- as.factor(merged_metrics_questionnaire_df$AA_fam)
+merged_metrics_questionnaire_df$CP_fam <- as.factor(merged_metrics_questionnaire_df$CP_fam)
+
+# H1 : There will be an inverse correlation between usability (SUS) and impact on visual attention. Meaning that better usability will correlate with lower impact on visual attention.
+
+cor_game_err_sus <- data.frame(
+    Group = c("Average AA", "Average CP", "AA T1", "AA T2 ", "AA T3", "CP T1", "CP T2", "CP T3"),
+    Correlation = c(
+        cor(merged_metrics_questionnaire_df$SUS_AA, apply(merged_metrics_questionnaire_df[, c("AA_T1", "AA_T2", "AA_T3")], 1, mean)),
+        cor(merged_metrics_questionnaire_df$SUS_CP, apply(merged_metrics_questionnaire_df[, c("CP_T1", "CP_T2", "CP_T3")], 1, mean)),
+        cor(merged_metrics_questionnaire_df$SUS_AA, merged_metrics_questionnaire_df$AA_T1),
+        cor(merged_metrics_questionnaire_df$SUS_AA, merged_metrics_questionnaire_df$AA_T2),
+        cor(merged_metrics_questionnaire_df$SUS_AA, merged_metrics_questionnaire_df$AA_T3),
+        cor(merged_metrics_questionnaire_df$SUS_CP, merged_metrics_questionnaire_df$CP_T1),
+        cor(merged_metrics_questionnaire_df$SUS_CP, merged_metrics_questionnaire_df$CP_T2),
+        cor(merged_metrics_questionnaire_df$SUS_CP, merged_metrics_questionnaire_df$CP_T3)
+    )
+)
+
+png("cor_game_err_sus_table.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(cor_game_err_sus)
+dev.off()
+
+# H2: Familiarity with a platform/OS will have an impact on performance and usability
+
+
+never_used_AA <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$AA_fam == "Never used", ]$SUS_AA
+
+occasionally_used_AA <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$AA_fam == "Used occasionally", ]$SUS_AA
+
+mean_usability_AA_never_used <- mean(never_used_AA)
+mean_usability_AA_occasionally_used <- mean(occasionally_used_AA)
+
+never_used_CP <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$CP_fam == "Never used", ]$SUS_CP
+
+occasionally_used_CP <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$CP_fam == "Used occasionally", ]$SUS_CP
+
+mean_usability_CP_never_used <- mean(never_used_CP)
+mean_usability_CP_occasionally_used <- mean(occasionally_used_CP)
+
+
+# Check if the t-test is significant better "greater" for used occasionally than never used for AA
+t_AA <- t.test(occasionally_used_AA, never_used_AA, alternative = "greater", paired = FALSE, var.equal = FALSE)
+
+# Check if the t-test is significant better "greater" for used occasionally than never used for CP
+t_CP <- t.test(occasionally_used_CP, never_used_CP, alternative = "greater", paired = FALSE, var.equal = FALSE)
+
+t_fam_sus_table <- data.frame("Platform" = c("AA", "CP"), "p" = c(t_AA$p.value, t_CP$p.value), "Never_used_mean" = c(mean_usability_AA_never_used, mean_usability_CP_never_used), "Used_occasionally_mean" = c(mean_usability_AA_occasionally_used, mean_usability_CP_occasionally_used))
+png("t_fam_sus_table.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(t_fam_sus_table)
 dev.off()
