@@ -178,8 +178,7 @@ png("cor_game_err_sus_table.png", width = 2000, height = 2000, res = 350, bg = "
 grid.table(cor_game_err_sus)
 dev.off()
 
-# H2: Familiarity with a platform/OS will have an impact on performance and usability
-
+# H2: Familiarity with a platform will have an impact on performance and usability
 
 never_used_AA <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$AA_fam == "Never used", ]$SUS_AA
 
@@ -204,5 +203,33 @@ t_CP <- t.test(occasionally_used_CP, never_used_CP, alternative = "greater", pai
 
 t_fam_sus_table <- data.frame("Platform" = c("AA", "CP"), "p" = c(t_AA$p.value, t_CP$p.value), "Never_used_mean" = c(mean_usability_AA_never_used, mean_usability_CP_never_used), "Used_occasionally_mean" = c(mean_usability_AA_occasionally_used, mean_usability_CP_occasionally_used))
 png("t_fam_sus_table.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(t_fam_sus_table)
+dev.off()
+
+# H3: Familiarity with a OS will have an impact on performance and usability
+
+Android_AA <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$Phone_type == "Android", ]$SUS_AA
+
+Apple_AA <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$Phone_type == "Apple", ]$SUS_AA
+
+mean_usability_Android_AA <- mean(Android_AA)
+mean_usability_Apple_AA <- mean(Apple_AA)
+
+Android_CP <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$Phone_type == "Android", ]$SUS_CP
+
+Apple_CP <- merged_metrics_questionnaire_df[merged_metrics_questionnaire_df$Phone_type == "Apple", ]$SUS_CP
+
+mean_usability_Android_CP <- mean(Android_CP)
+mean_usability_Apple_CP <- mean(Apple_CP)
+
+
+# Check if the t-test is significant better "greater" for used occasionally than never used for AA
+t_pt_AA <- t.test(Android_AA, Apple_AA, paired = FALSE, var.equal = FALSE)
+
+# Check if the t-test is significant better "greater" for used occasionally than never used for CP
+t_pt_CP <- t.test(Android_CP, Apple_CP, paired = FALSE, var.equal = FALSE)
+
+t_fam_sus_table <- data.frame("Platform" = c("AA", "CP"), "p" = c(t_pt_AA$p.value, t_pt_CP$p.value))
+png("t_phone_type_sus_table.png", width = 2000, height = 2000, res = 350, bg = "white")
 grid.table(t_fam_sus_table)
 dev.off()
