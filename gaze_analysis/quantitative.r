@@ -18,8 +18,8 @@ df$average_game_error <- df$average_game_error - baseline$average_game_error[mat
 
 # Anova for time on task by platform and task
 
-task_metrics_df <- df[, c("subjectID", "platformID", "taskID", "time_on_task", "average_game_error")]
-colnames(task_metrics_df) <- c("subjectID", "platform", "task", "time_on_task", "average_game_error")
+task_metrics_df <- df[, c("subjectID", "platformID", "taskID", "time_on_task", "average_game_error", "percentage_of_distracting_gazes")]
+colnames(task_metrics_df) <- c("subjectID", "platform", "task", "time_on_task", "average_game_error", "percentage_of_distracting_gazes")
 
 # Convert to factors for ANOVA
 task_metrics_df$subjectID <- as.factor(task_metrics_df$subjectID)
@@ -63,6 +63,15 @@ ggplot(task_metrics_df, aes(x = platform, y = time_on_task, fill = task)) +
     ggtitle("Time on task by platform and task")
 
 ggsave("time_on_task_boxplot_facet.png")
+
+ggplot(task_metrics_df, aes(x = platform, y = percentage_of_distracting_gazes, fill = task)) +
+    geom_boxplot() +
+    facet_wrap(~task) +
+    xlab("Platform") +
+    ylab("Percentage of distracting gazes") +
+    ggtitle("Percentage of distracting gazes by platform and task")
+
+ggsave("percentage_gaze_boxplot_facet.png")
 
 ggplot(task_metrics_df, aes(
     x = platform, y = average_game_error,
