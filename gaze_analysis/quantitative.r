@@ -42,6 +42,13 @@ anova_game_err <- ezANOVA(
     within = .(platform, task)
 )
 
+perc_distr_gaze <- ezANOVA(
+    data = task_metrics_df,
+    dv = percentage_of_distracting_gazes,
+    wid = subjectID,
+    within = .(platform, task)
+)
+
 
 # create a table with the result of ANOVA and save it as a png
 anova_tot_table <- data.frame("Source" = c("platform", "task", "platform:task"), "p" = c(format(anova_tot$ANOVA$p[1], scientific = FALSE), format(anova_tot$ANOVA$p[2], scientific = FALSE), format(anova_tot$ANOVA$p[3], scientific = FALSE)))
@@ -52,6 +59,11 @@ dev.off()
 anova_game_err_table <- data.frame("Source" = c("platform", "task", "platform:task"), "p" = c(format(anova_game_err$ANOVA$p[1], scientific = FALSE), format(anova_game_err$ANOVA$p[2], scientific = FALSE), format(anova_game_err$ANOVA$p[3], scientific = FALSE)))
 png("anova_game_err_table.png", width = 2000, height = 2000, res = 350, bg = "white")
 grid.table(anova_game_err_table)
+dev.off()
+
+anova_perc_distr_gaze_table <- data.frame("Source" = c("platform", "task", "platform:task"), "p" = c(format(perc_distr_gaze$ANOVA$p[1], scientific = FALSE), format(perc_distr_gaze$ANOVA$p[2], scientific = FALSE), format(perc_distr_gaze$ANOVA$p[3], scientific = FALSE)))
+png("anova_perc_distr_gaze_table.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(anova_perc_distr_gaze_table)
 dev.off()
 
 # plot 3 windows of boxplots for the time on task variable by platform
@@ -84,7 +96,6 @@ ggplot(task_metrics_df, aes(
     ggtitle("Average game error by platform and task")
 
 ggsave("avg_game_err_boxplot_facet.png")
-
 
 
 t_T1 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$time_on_task[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
@@ -127,6 +138,27 @@ tot_t_tests_table_game_err <- data.frame("Task" = c("T1", "T2", "T3"), "p" = c(t
 png("tot_t_tests_table_game_err.png", width = 2000, height = 2000, res = 350, bg = "white")
 grid.table(tot_t_tests_table_game_err)
 dev.off()
+
+# Post hoc analysis for percentage of distracting gazes
+t_T1_perc <- t.test(df$percentage_of_distracting_gazes[df$platformID == "AA" & df$taskID == "T1"], df$percentage_of_distracting_gazes[df$platformID == "CP" & df$taskID == "T1"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+t_T2_perc <- t.test(df$percentage_of_distracting_gazes[df$platformID == "AA" & df$taskID == "T2"], df$percentage_of_distracting_gazes[df$platformID == "CP" & df$taskID == "T2"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+t_T3_perc <- t.test(df$percentage_of_distracting_gazes[df$platformID == "AA" & df$taskID == "T3"], df$percentage_of_distracting_gazes[df$platformID == "CP" & df$taskID == "T3"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+
+tot_t_tests_table <- data.frame("Task" = c("T1", "T2", "T3"), "p" = c(t_T1_perc$p.value, t_T2_perc$p.value, t_T3_perc$p.value))
+png("tot_t_tests_table_perc.png", width = 2000, height = 2000, res = 350, bg = "white")
+grid.table(tot_t_tests_table)
+dev.off()
+
+# Check if the t-test is significant
+print("Percentage of distracting gazes:")
+print(t_T1_perc$p.value)
+print(t_T2_perc$p.value)
+print(t_T3_perc$p.value) # ! Only T3 is significant
+
+
 
 
 # Create a data frame with your correlation values and labels
