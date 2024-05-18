@@ -26,6 +26,76 @@ task_metrics_df$subjectID <- as.factor(task_metrics_df$subjectID)
 task_metrics_df$platform <- as.factor(task_metrics_df$platform)
 task_metrics_df$task <- as.factor(task_metrics_df$task)
 
+fill_na <- function(x) {
+    x[is.na(x)] <- 0
+    return(x)
+}
+# Log transform time on task and average game error
+task_metrics_df$time_on_task <- log(task_metrics_df$time_on_task)
+task_metrics_df$average_game_error <- fill_na(log(task_metrics_df$average_game_error))
+
+# qq-plots for time on task and average game error by platform and task to check for normality using ggplot2
+
+ggplot(task_metrics_df, aes(sample = time_on_task, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for time on task") +
+    xlab("Theoretical quantiles") +
+    ylab("Sample quantiles")
+
+
+ggsave("qq_time_on_task.png")
+
+ggplot(task_metrics_df, aes(sample = average_game_error, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for average game error") +
+    xlab("Theoretical quantiles") +
+    ylab("Sample quantiles")
+
+ggsave("qq_avg_game_err.png")
+
+ggplot(task_metrics_df, aes(sample = percentage_of_distracting_gazes, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for percentage of distracting gazes") +
+    xlab("Theoretical quantiles") +
+    ylab("Sample quantiles")
+
+ggsave("qq_perc_distr_gaze.png")
+
+# Shapiro-Wilk test for normality for each task and platform for time on task and average game error
+shapiro_tot_T1_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "AA", ]$time_on_task)
+shapiro_tot_T2_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "AA", ]$time_on_task)
+shapiro_tot_T3_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "AA", ]$time_on_task)
+shapiro_tot_T1_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "CP", ]$time_on_task)
+shapiro_tot_T2_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "CP", ]$time_on_task)
+shapiro_tot_T3_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "CP", ]$time_on_task)
+
+
+shapiro_err_T1_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "AA", ]$average_game_error)
+shapiro_err_T2_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "AA", ]$average_game_error)
+shapiro_err_T3_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "AA", ]$average_game_error)
+shapiro_err_T1_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "CP", ]$average_game_error)
+shapiro_err_T2_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "CP", ]$average_game_error)
+shapiro_err_T3_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "CP", ]$average_game_error)
+
+shapiro_perc_T1_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "AA", ]$percentage_of_distracting_gazes)
+shapiro_perc_T2_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "AA", ]$percentage_of_distracting_gazes)
+shapiro_perc_T3_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "AA", ]$percentage_of_distracting_gazes)
+shapiro_perc_T1_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "CP", ]$percentage_of_distracting_gazes)
+shapiro_perc_T2_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T2" & task_metrics_df$platform == "CP", ]$percentage_of_distracting_gazes)
+shapiro_perc_T3_CP <- shapiro.test(task_metrics_df[task_metrics_df$task == "T3" & task_metrics_df$platform == "CP", ]$percentage_of_distracting_gazes)
+
+shapiro_table <- data.frame("Task" = c("T1", "T2", "T3"), "Platform" = c("AA", "AA", "AA", "CP", "CP", "CP"), "Time_on_task" = c(shapiro_tot_T1_AA$p.value, shapiro_tot_T2_AA$p.value, shapiro_tot_T3_AA$p.value, shapiro_tot_T1_CP$p.value, shapiro_tot_T2_CP$p.value, shapiro_tot_T3_CP$p.value), "Average_game_error" = c(shapiro_err_T1_AA$p.value, shapiro_err_T2_AA$p.value, shapiro_err_T3_AA$p.value, shapiro_err_T1_CP$p.value, shapiro_err_T2_CP$p.value, shapiro_err_T3_CP$p.value), "Percentage_of_distracting_gazes" = c(shapiro_perc_T1_AA$p.value, shapiro_perc_T2_AA$p.value, shapiro_perc_T3_AA$p.value, shapiro_perc_T1_CP$p.value, shapiro_perc_T2_CP$p.value, shapiro_perc_T3_CP$p.value))
+
+png("shapiro_table.png", width = 3000, height = 3000, res = 350, bg = "white")
+grid.table(shapiro_table)
+dev.off()
+
 
 # Library for not reshaping the data
 anova_tot <- ezANOVA(
@@ -92,6 +162,7 @@ ggplot(task_metrics_df, aes(
     geom_boxplot() +
     facet_wrap(~task) +
     xlab("Platform") +
+    ylim(1, 5) +
     ylab("Avg game error") +
     ggtitle("Average game error by platform and task")
 
@@ -109,11 +180,7 @@ number_of_tests <- 3
 alpha <- 0.05
 p_adjust <- alpha / number_of_tests
 
-# Check if the t-test is significant
-print("Time on task:")
-print(t_T1$p.value < p_adjust)
-print(t_T2$p.value < p_adjust)
-print(t_T3$p.value < p_adjust) # ! Only T3 is significant
+
 
 tot_t_tests_table <- data.frame("Task" = c("T1", "T2", "T3"), "p" = c(t_T1$p.value, t_T2$p.value, t_T3$p.value))
 png("tot_t_tests_table.png", width = 2000, height = 2000, res = 350, bg = "white")
@@ -127,12 +194,6 @@ t_T2_game_err <- t.test(df$average_game_error[df$platformID == "AA" & df$taskID 
 
 t_T3_game_err <- t.test(df$average_game_error[df$platformID == "AA" & df$taskID == "T3"], df$average_game_error[df$platformID == "CP" & df$taskID == "T3"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
-# Check if the t-test is significant
-print("Game error:")
-print(t_T1_game_err$p.value < p_adjust)
-print(t_T2_game_err$p.value < p_adjust)
-print(t_T3_game_err$p.value < p_adjust)
-# ! No significant differences in game error between platforms for any task found
 
 tot_t_tests_table_game_err <- data.frame("Task" = c("T1", "T2", "T3"), "p" = c(t_T1_game_err$p.value, t_T2_game_err$p.value, t_T3_game_err$p.value))
 png("tot_t_tests_table_game_err.png", width = 2000, height = 2000, res = 350, bg = "white")
@@ -151,14 +212,6 @@ tot_t_tests_table <- data.frame("Task" = c("T1", "T2", "T3"), "p" = c(t_T1_perc$
 png("tot_t_tests_table_perc.png", width = 2000, height = 2000, res = 350, bg = "white")
 grid.table(tot_t_tests_table)
 dev.off()
-
-# Check if the t-test is significant
-print("Percentage of distracting gazes:")
-print(t_T1_perc$p.value)
-print(t_T2_perc$p.value)
-print(t_T3_perc$p.value) # ! Only T3 is significant
-
-
 
 
 # Create a data frame with your correlation values and labels
