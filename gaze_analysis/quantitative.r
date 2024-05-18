@@ -26,6 +26,68 @@ task_metrics_df$subjectID <- as.factor(task_metrics_df$subjectID)
 task_metrics_df$platform <- as.factor(task_metrics_df$platform)
 task_metrics_df$task <- as.factor(task_metrics_df$task)
 
+# Density plots of non normalized data
+
+ggplot(task_metrics_df, aes(sample = time_on_task, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for time on task") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
+
+
+ggsave("qq_time_on_task.png")
+
+ggplot(task_metrics_df, aes(sample = average_game_error, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for average game error") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
+
+ggsave("qq_avg_game_err.png")
+
+ggplot(task_metrics_df, aes(sample = percentage_of_distracting_gazes, colour = platform)) +
+    stat_qq() +
+    geom_qq_line(color = "black") +
+    facet_wrap(~ platform + task) +
+    ggtitle("QQ-plot for percentage of distracting gazes") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
+
+ggsave("qq_perc_distr_gaze.png")
+
+# Density plot before normalization
+
+ggplot(task_metrics_df, aes(x = time_on_task, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Density plot for time on task") +
+    xlab("Time on task") +
+    ylab("Density")
+
+ggsave("density_time_on_task.png")
+
+ggplot(task_metrics_df, aes(x = average_game_error, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Density plot for average game error") +
+    xlab("Average game error") +
+    ylab("Density")
+
+ggsave("density_avg_game_err.png")
+
+ggplot(task_metrics_df, aes(x = percentage_of_distracting_gazes, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Density plot for percentage of distracting gazes") +
+    xlab("Percentage of distracting gazes") +
+    ylab("Density")
+
+ggsave("density_perc_distr_gaze.png")
+
 fill_na <- function(x) {
     x[is.na(x)] <- 0
     return(x)
@@ -40,32 +102,64 @@ ggplot(task_metrics_df, aes(sample = time_on_task, colour = platform)) +
     stat_qq() +
     geom_qq_line(color = "black") +
     facet_wrap(~ platform + task) +
-    ggtitle("QQ-plot for time on task") +
-    xlab("Theoretical quantiles") +
-    ylab("Sample quantiles")
+    ggtitle("Normalized QQ-plot for time on task") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
 
 
-ggsave("qq_time_on_task.png")
+ggsave("log_qq_time_on_task.png")
 
 ggplot(task_metrics_df, aes(sample = average_game_error, colour = platform)) +
     stat_qq() +
     geom_qq_line(color = "black") +
     facet_wrap(~ platform + task) +
-    ggtitle("QQ-plot for average game error") +
-    xlab("Theoretical quantiles") +
-    ylab("Sample quantiles")
+    ggtitle("Normalized QQ-plot for average game error") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
 
-ggsave("qq_avg_game_err.png")
+ggsave("log_qq_avg_game_err.png")
 
 ggplot(task_metrics_df, aes(sample = percentage_of_distracting_gazes, colour = platform)) +
     stat_qq() +
     geom_qq_line(color = "black") +
     facet_wrap(~ platform + task) +
-    ggtitle("QQ-plot for percentage of distracting gazes") +
-    xlab("Theoretical quantiles") +
-    ylab("Sample quantiles")
+    ggtitle("Normalized QQ-plot for percentage of distracting gazes") +
+    xlab("Normal quantiles") +
+    ylab("Data Sample quantiles")
 
-ggsave("qq_perc_distr_gaze.png")
+ggsave("log_qq_perc_distr_gaze.png")
+
+# Density plots for time on task and average game error by platform and task to check for normality using ggplot2
+
+ggplot(task_metrics_df, aes(x = time_on_task, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Normalized Density plot for time on task") +
+    xlab("Time on task") +
+    ylab("Density")
+
+ggsave("log_density_time_on_task.png")
+
+ggplot(task_metrics_df, aes(x = average_game_error, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Normalized Density plot for average game error") +
+    xlab("Average game error") +
+    ylab("Density")
+
+ggsave("log_density_avg_game_err.png")
+
+ggplot(task_metrics_df, aes(x = percentage_of_distracting_gazes, fill = platform)) +
+    geom_density(alpha = 0.5) +
+    facet_wrap(~ platform + task) +
+    ggtitle("Normalized Density plot for percentage of distracting gazes") +
+    xlab("Percentage of distracting gazes") +
+    ylab("Density")
+
+ggsave("log_density_perc_distr_gaze.png")
+
+
+
 
 # Shapiro-Wilk test for normality for each task and platform for time on task and average game error
 shapiro_tot_T1_AA <- shapiro.test(task_metrics_df[task_metrics_df$task == "T1" & task_metrics_df$platform == "AA", ]$time_on_task)
@@ -174,6 +268,12 @@ t_T1 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T1"], df$ti
 t_T2 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T2"], df$time_on_task[df$platformID == "CP" & df$taskID == "T2"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
 t_T3 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T3"], df$time_on_task[df$platformID == "CP" & df$taskID == "T3"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
+
+print(t_T1)
+print(t_T2)
+print(t_T3)
+
+
 
 # P-value correction
 number_of_tests <- 3
