@@ -74,6 +74,8 @@ t_test_SUS <- t.test(SUS_AA$SUS, SUS_CP$SUS, paired = TRUE, alternative = "two.s
 
 t_test_EOU <- t.test(EOU_AA$EOU, EOU_CP$EOU, paired = TRUE, alternative = "two.sided")
 
+print(t_test_SUS)
+print(t_test_EOU)
 png("SUS_scores.png", width = 1500, height = 1500, res = 300, bg = "white")
 t_test_table <- data.frame("Variable" = c("SUS", "EOU"), "t-value" = c(t_test_SUS$statistic, t_test_EOU$statistic), "p-value" = c(t_test_SUS$p.value, t_test_EOU$p.value), "mean_AA" = c(SUS_AA$MEAN, EOU_AA$MEAN), "mean_CP" = c(SUS_CP$MEAN, EOU_CP$MEAN))
 grid.table(t_test_table)

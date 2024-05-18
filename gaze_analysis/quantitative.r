@@ -214,6 +214,8 @@ perc_distr_gaze <- ezANOVA(
 )
 
 
+
+
 # create a table with the result of ANOVA and save it as a png
 anova_tot_table <- data.frame("Source" = c("platform", "task", "platform:task"), "p" = c(format(anova_tot$ANOVA$p[1], scientific = FALSE), format(anova_tot$ANOVA$p[2], scientific = FALSE), format(anova_tot$ANOVA$p[3], scientific = FALSE)))
 png("anova_tot_table.png", width = 2000, height = 2000, res = 350, bg = "white")
@@ -269,9 +271,7 @@ t_T2 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T2"], df$ti
 
 t_T3 <- t.test(df$time_on_task[df$platformID == "AA" & df$taskID == "T3"], df$time_on_task[df$platformID == "CP" & df$taskID == "T3"], alternative = "two.sided", paired = TRUE, var.equal = FALSE)
 
-print(t_T1)
-print(t_T2)
-print(t_T3)
+
 
 
 
