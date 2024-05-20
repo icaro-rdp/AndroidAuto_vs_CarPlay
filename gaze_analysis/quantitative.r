@@ -158,7 +158,41 @@ ggplot(task_metrics_df, aes(x = percentage_of_distracting_gazes, fill = platform
 
 ggsave("log_density_perc_distr_gaze.png")
 
+# Boxplot of T3 for each platform for time on task and average game error and percentage of distracting gazes
 
+ggplot(task_metrics_df[task_metrics_df$task == "T3", ], aes(x = platform, y = time_on_task, fill = platform)) +
+    geom_boxplot() +
+    xlab("Platform") +
+    ylab("Time on task") +
+    ggtitle("Time on task by platform for task T3")
+
+ggsave("1_time_on_task_boxplot_T3.png")
+
+ggplot(task_metrics_df[task_metrics_df$task == "T3", ], aes(x = platform, y = average_game_error, fill = platform)) +
+    geom_boxplot() +
+    xlab("Platform") +
+    ylab("Average game error") +
+    ggtitle("Average game error by platform for task T3")
+
+ggsave("2_avg_game_err_boxplot_T3.png")
+
+ggplot(task_metrics_df[task_metrics_df$task == "T3", ], aes(x = platform, y = percentage_of_distracting_gazes, fill = platform)) +
+    geom_boxplot() +
+    xlab("Platform") +
+    ylab("Percentage of distracting gazes") +
+    ggtitle("Percentage of distracting gazes by platform for task T3")
+
+ggsave("3_perc_distr_gaze_boxplot_T3.png")
+
+# Boxplot of AA and CP on percentage of distracting gazes
+
+ggplot(task_metrics_df, aes(x = platform, y = percentage_of_distracting_gazes, fill = platform)) +
+    geom_boxplot() +
+    xlab("Platform") +
+    ylab("Percentage of distracting gazes") +
+    ggtitle("Percentage of distracting gazes by platform")
+
+ggsave("4_perc_distr_gaze_boxplot.png")
 
 
 # Shapiro-Wilk test for normality for each task and platform for time on task and average game error
